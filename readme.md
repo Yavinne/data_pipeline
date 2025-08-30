@@ -1,69 +1,91 @@
-🚀 Pipeline ETL - Open Data (Batch Processing)
-📌 Objectif du projet
+# Pipeline ETL - Open Data Qualité de l’air
 
-Ce projet illustre la mise en place d’un pipeline ETL complet (Extract – Transform – Load) permettant d’ingérer, transformer et charger des données ouvertes dans une base de données relationnelle.
-L’objectif est de fournir un exemple concret et réutilisable d’ingénierie de données pour des cas d’analyse ultérieurs (dashboards, APIs, etc.).
+## Table des matières
+1. [Contexte & Objectifs](#contexte--objectifs)  
+2. [Stack Technique](#stack-technique)  
+3. [Sources de Données](#sources-de-données)  
+4. [Architecture du Pipeline](#architecture-du-pipeline)  
+5. [Installation & Lancement](#installation--lancement)  
+6. [Modèle de Données](#modèle-de-données)  
+7. [Résultats Attendus](#résultats)  
+8. [Améliorations Possibles](#améliorations-possibles)  
+9. [Licence](#licence)  
+10. [Contacts](#contacts)  
 
-🛠️ Stack Technique
+---
 
-Langage : Python 3.10+
+## Contexte & Objectifs
+L’entreprise fictive **GreenAir Analytics** aide les municipalités à analyser la qualité de l’air dans les grandes villes françaises afin de :  
+- Détecter les pics de pollution (PM10, NO₂, O₃).  
+- Produire des rapports journaliers pour les autorités locales.  
+- Mettre à disposition une base de données fiable pour alimenter des dashboards BI.  
 
-Orchestration : Apache Airflow
+👉 Ce projet consiste à mettre en place un **pipeline ETL automatisé** permettant d’ingérer des données de qualité de l’air depuis une API Open Data, de les nettoyer et de les stocker dans une base PostgreSQL pour exploitation analytique.  
 
-Stockage : PostgreSQL (peut être remplacé par MySQL ou BigQuery)
+[🔝 Back to top](#table-des-matières)  
 
-Transformation : Pandas / SQL
+---
 
-Containerisation : Docker & Docker Compose
+## Stack Technique
+- **Langage** : Python 3.13  
+- **Orchestration** : Apache Airflow  
+- **Stockage** : PostgreSQL (extensible à MySQL ou BigQuery)  
+- **Transformation** : Pandas / SQL  
+- **Containerisation** : Docker & Docker Compose  
+- **Tests** : Pytest  
 
-Tests : Pytest
+[🔝 Back to top](#table-des-matières)  
 
-📂 Sources de données
+---
 
-Pour ce projet, les données proviennent de l’API Open Data de la qualité de l’air :
-👉 https://opendata.paris.fr/explore/dataset/
+## Sources de Données
+- **Fournisseur** : [API Open Data - Qualité de l’air Paris](https://opendata.paris.fr/explore/dataset/)  
+- **Format** : JSON / CSV  
+- **Contenu** : mesures journalières des polluants (PM10, NO₂, O₃) par ville/zone géographique  
+- **Volume estimé** : quelques Mo par jour  
 
-📌 Exemple :
+[🔝 Back to top](#table-des-matières)  
 
-Données brutes : niveaux de pollution journaliers par ville
+---
 
-Format : JSON / CSV
-
-Volume : quelques Mo par jour
-
-🔄 Architecture du pipeline
+## Architecture du Pipeline
+```mermaid
 flowchart LR
     A[API Open Data] --> B[Airflow Extract Task]
     B --> C[Transform (Pandas)]
     C --> D[Load into PostgreSQL]
     D --> E[Analytical Queries / BI Tools]
+```
 
+[🔝 Back to top](#table-des-matières)
 
-Extract : récupération des données depuis l’API (ou fichier CSV).
+---
 
-Transform : nettoyage (valeurs nulles, typage), enrichissement (calculs de moyennes, agrégations).
+## Installation & Lancement
 
-Load : insertion dans une table PostgreSQL normalisée.
+### Cloner le repo
+git clone https://github.com/username/pipeline-etl-air-quality.git
+cd pipeline-etl-air-quality
 
-🚀 Lancement du projet
-1️⃣ Cloner le repo
-git clone https://github.com/username/pipeline-etl-opendata.git
-cd pipeline-etl-opendata
-
-2️⃣ Lancer les services
+### Lancer les services
 docker-compose up -d
 
-3️⃣ Accéder aux outils
+### Accéder aux outils
 
 Airflow UI → http://localhost:8080
 
-PostgreSQL → localhost:5432 (user/password définis dans .env)
+PostgreSQL → localhost:5432 (credentials dans .env)
 
-4️⃣ Lancer le DAG
+### Lancer le DAG
 
 Activer le DAG etl_air_quality dans Airflow et exécuter le pipeline.
 
-📊 Exemple de schéma PostgreSQL
+[🔝 Back to top](#table-des-matières)
+
+---
+
+## Modèle de Données
+```mermaid
 CREATE TABLE air_quality (
     id SERIAL PRIMARY KEY,
     city VARCHAR(255),
@@ -73,21 +95,48 @@ CREATE TABLE air_quality (
     o3 FLOAT,
     created_at TIMESTAMP DEFAULT NOW()
 );
+```
 
-✅ Résultats attendus
+[🔝 Back to top](#table-des-matières)
 
-Données brutes extraites quotidiennement
+---
 
-Données transformées (format homogène, colonnes nettoyées)
+## Résultats
+- Données brutes ingérées automatiquement chaque jour.
+- Données nettoyées et standardisées (colonnes homogènes).
+- Base PostgreSQL exploitable directement pour requêtes SQL et BI.
 
-Base PostgreSQL prête pour l’analyse (requêtes SQL, BI, dashboards).
+Exemple d’usage : un dashboard Power BI ou Metabase affichant l’évolution de la pollution par ville.
 
-🔮 Améliorations possibles
+[🔝 Back to top](#table-des-matières)
 
-Ajouter un contrôle qualité avec Great Expectations
+---
 
-Automatiser les tests unitaires avec CI/CD (GitHub Actions)
+## Améliorations Possibles
 
-Déployer le pipeline sur GCP/AWS/Azure
+Ajouter des contrôles qualité avec Great Expectations.
 
-Créer un dashboard Streamlit/Metabase branché sur PostgreSQL
+Mettre en place du monitoring avec Prometheus + Grafana.
+
+Déployer sur un cloud (GCP/AWS/Azure).
+
+Créer une API REST pour exposer les données nettoyées.
+
+[🔝 Back to top](#table-des-matières)
+
+---
+
+## Licence
+
+Ce projet est sous licence MIT.
+
+---
+
+## Contacts
+
+👤 Auteur : Vulfran NDONG
+📧 Email : vianneyasog@gmail.com
+
+💼 LinkedIn : linkedin.com/in/tonprofil
+
+🐙 GitHub : github.com/Yavinne
